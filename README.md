@@ -1,1 +1,1 @@
-# Self-Organised-Branching-Processes
+# self-organised-branching-processes
