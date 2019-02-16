@@ -1,3 +1,5 @@
+#visualisation.py
+
 import matplotlib.pyplot as plt
 import numpy as np
 import itertools
@@ -25,11 +27,10 @@ def show_relation_boundary_tstar():
     fig = plt.figure()
     ax = plt.gca()
     ax.set_yscale('log')
-    for n in range(4, 20):
+    for n in range(4, 22):
         model = Avalanche(p = 0.1, boundary = n)
         t_star = model.find_asymptotic_time()
         ax.scatter(n, t_star, color="r")
-
     plt.show()
 
 def plot_distribution_avalanche_size(models, trials = 1000000):
@@ -61,3 +62,26 @@ def reproduce_figure3_paper():
     model4 = Avalanche(boundary = 28)
     models = [model1, model2, model3, model4]
     plot_distribution_avalanche_size(models)
+
+def draw_avalanche_helper(node, x, y):
+    plt.scatter(x, y, s=100, c="black")
+    depth = 5 * (1-y)
+    plt.scatter(x+0.1, y, s=0)
+    plt.scatter(x-0.1, y, s=0)
+    if node.left:
+        nextx = x-(2**(-depth - 2))
+        if depth < 4:
+            plt.plot(np.arange(nextx, x, (x-nextx) / 185), np.arange(y-0.2, y-0.015, 0.001))
+        draw_avalanche_helper(node.left, nextx, y-0.2)
+    if node.right:
+        nextx = x+(2**(-depth - 2))
+        if depth < 8:
+            plt.plot(np.arange(x, nextx, (nextx-x) / 185), np.arange(y-0.015, y-0.2, -0.001))
+        draw_avalanche_helper(node.right, nextx, y-0.2)
+
+def draw_avalanche(node):
+    draw_avalanche_helper(node, 0.5, 1)
+    plt.scatter(0, 0, s=0)
+    plt.scatter(1, 1, s=0)
+    plt.axis('off')
+    plt.show()

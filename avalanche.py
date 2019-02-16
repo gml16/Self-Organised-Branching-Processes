@@ -1,17 +1,19 @@
+#avalanche.py
+
 import random
 import math
 import scipy.integrate as integrate
 
 from node import *
 
-
 class Avalanche:
     def __init__(self, p=0.5, boundary=10):
-        self.p = p # Probability for each site to relax
-        self.boundary = boundary # Represents the maximum size of the avalanche
+        self.p = p                        # Probability for each site to relax
+        self.boundary = boundary          # Represents the maximum size of the avalanche
         self.N = 2**(self.boundary+1) - 1 # Maximum size of the avalanche
-        self.sigma = 1
-        self.s = 1
+        self.sigma = 1                    # Number of sites leaving the system
+        self.s = 1                        # Number of sites relaxing
+        self.root = Node()
 
     def relaxation_dynamics(self, parent, depth):
         if depth < self.boundary:
@@ -29,8 +31,8 @@ class Avalanche:
             return (1, 1)
 
     def add_unit_of_energy(self):
-        root = Node()
-        self.s, self.sigma = self.relaxation_dynamics(root, 0)
+        self.root = Node()
+        self.s, self.sigma = self.relaxation_dynamics(self.root, 0)
         self.p += (1 - self.sigma)/self.N
 
     def find_asymptotic_time(self):
@@ -40,15 +42,3 @@ class Avalanche:
              self.add_unit_of_energy()
              t += 1
         return t
-
-'''
-    def phi(self, p):
-        return (1/(2*math.pi*(0.26/self.N))**0.5) * math.exp(-((p-(0.5 - 0.69/self.N))**2)/(2*(0.26/self.N)))
-
-    def P_n(self, s, p):
-        return ((2*(1-p)/(math.pi*p))**0.5)/(s**(3/2)) * math.exp(-s/(-2/math.log(4*p*(1-p))))
-
-
-    def D(self, s):
-        return integrate.quad(lambda p: self.phi(p)*self.P_n(s,p), 1/(10**5), 1)
- '''
