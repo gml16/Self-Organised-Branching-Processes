@@ -8,6 +8,7 @@ def main():
     print("[2] Relationship between boundary of the avalanche and time at which the probability has reached critical value 0.5")
     print("[3] Probability distribution of avalanches' size")
     print("[4] A customised avalanche")
+    print("[5] An estimate of the slope of p(t) at t = 0 with respect to n")
     choice = input()
     if choice == "1":
         reproduce_figure2_paper()
@@ -28,8 +29,10 @@ def main():
             draw_avalanche(model.root)
             print(str(model.sigma) + " units of energy left the site")
             print("The new probability for each site to relax is: " + str(model.p))
+    elif choice == "5":
+        slopes_at_p0_wrt_n()
     else:
-        print("Please type 1, 2 or 3")
+        print("Please type 1, 2, 3, 4 or 5")
         main()
 
 if __name__ == '__main__':
