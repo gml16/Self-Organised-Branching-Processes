@@ -7,16 +7,20 @@ import itertools
 from avalanche import *
 
 def plot_p_over_t(models, t=3000):
-    colors = itertools.cycle(["r", "b", "g"])
+    fig = plt.figure()
+    plt.switch_backend('agg')
     plt.title("The value of p as a function of time for a system with n = " + str(models[0].boundary) + " generations")
     plt.xlabel("p(t)")
     plt.ylabel("t")
+    colors = itertools.cycle(["r", "b", "g"])
     for m in models:
         c = next(colors)
         for i in range(t):
             plt.scatter(i, m.p, color=c, s = 0.1)
             m.add_unit_of_energy()
-    plt.show()
+    #plt.show()
+    plt.savefig("plot_p_over_t" + str(t))
+    plt.close(fig)
 
 def reproduce_figure2_paper():
     model1 = Avalanche(p = 0.1, boundary = 10)
@@ -28,6 +32,7 @@ def reproduce_figure2_paper():
 def show_relation_boundary_tstar():
     fig = plt.figure()
     ax = plt.gca()
+    plt.switch_backend('agg')
     plt.title("Time t* at which p(t) reaches the asymptotic value p(t*) ≃ 1/2")
     plt.xlabel("t*")
     plt.ylabel("n")
@@ -36,11 +41,14 @@ def show_relation_boundary_tstar():
         model = Avalanche(p = 0.1, boundary = n)
         t_star = model.find_asymptotic_time()
         ax.scatter(n, t_star, color="r")
-    plt.show()
+    #plt.show()
+    plt.savefig("show_relation_boundary_tstar")
+    plt.close(fig)
 
 def plot_distribution_avalanche_size(models, trials = 1000000):
     fig = plt.figure()
     ax = plt.gca()
+    plt.switch_backend('agg')
     ax.set_xscale('log')
     ax.set_yscale('log')
     plt.title("Distribution probability of an avalanche's size")
@@ -61,7 +69,9 @@ def plot_distribution_avalanche_size(models, trials = 1000000):
                 sizes[m.s] = 1/trials
         for s, Ds in sizes.items():
             ax.scatter(s, Ds, color=c, s = 0.2)
-    plt.show()
+    #plt.show()
+    plt.savefig("plot_distribution_avalanche_size" + str(trials))
+    plt.close(fig)
 
 def reproduce_figure3_paper():
     model1 = Avalanche(boundary = 16)
@@ -88,11 +98,15 @@ def draw_avalanche_helper(node, x, y):
         draw_avalanche_helper(node.right, nextx, y-0.2)
 
 def draw_avalanche(node):
+    fig = plt.figure()
+    plt.switch_backend('agg')
     draw_avalanche_helper(node, 0.5, 1)
     plt.scatter(0, 0, s=0)
     plt.scatter(1, 1, s=0)
     plt.axis('off')
-    plt.show()
+    #plt.show()
+    plt.savefig("draw_avalanche")
+    plt.close(fig)
 
 def slope_at_p0(model, trials = 100):
     base_p0 = model.p
@@ -105,6 +119,7 @@ def slope_at_p0(model, trials = 100):
 
 def slopes_at_p0_wrt_n():
     fig = plt.figure()
+    plt.switch_backend('agg')
     ax = plt.gca()
     plt.title("Estimate of the slope of p(t) at t = 0 for a starting probability p(0) = 0.1")
     plt.xlabel("n")
@@ -112,4 +127,6 @@ def slopes_at_p0_wrt_n():
     ax.set_yscale('log')
     for i in range(1, 40):
         ax.scatter(i, slope_at_p0(Avalanche(0.1, i)), s = 0.8)
-    plt.show()
+    #plt.show()
+    plt.savefig("slopes_at_p0_wrt_n")
+    plt.close(fig)
